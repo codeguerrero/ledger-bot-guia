@@ -40,6 +40,10 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+/* Grid and flex children may shrink below their content; long words (emails, links) wrap instead of widening the page. */
+main > *, ol.sub > li, .perm > li, .case { min-width: 0; }
+body { overflow-wrap: break-word; }
+code { overflow-wrap: anywhere; }
 body {
   background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
@@ -69,7 +73,7 @@ ol.sub li::marker { color: var(--muted); font-weight: 600; }
 .nope { color: var(--no); font-weight: 700; }
 
 .copy { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 14px; min-width: 0; }
-.copy .value { font-family: var(--font-mono); font-size: 15px; flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; user-select: all; }
+.copy .value { font-family: var(--font-mono); font-size: 15px; flex: 1; min-width: 0; overflow-wrap: anywhere; user-select: all; }
 .copy button { font: 600 13px var(--font-body); color: var(--accent); background: var(--accent-soft); border: 0; border-radius: 7px; padding: 8px 12px; cursor: pointer; flex: none; }
 .copy button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
