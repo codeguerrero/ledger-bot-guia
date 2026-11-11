@@ -156,7 +156,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
     <div class="num" aria-hidden="true">4</div>
     <div class="step-body">
       <h2>Úsalo</h2>
-      <p>El bot revisa Binance cada minuto y registra tus movimientos desde un día antes de tu aprobación.</p>
+      <p>El bot revisa Binance cada minuto. Al empezar registra tus órdenes P2P desde 7 días antes de tu aprobación, y Binance Pay, depósitos y retiros desde un día antes. Para traer más historia usa <code>/importar</code>.</p>
       <h3>Órdenes P2P</h3>
       <p>Por cada orden nueva llega un aviso <b>"🔔 Nueva orden P2P"</b>. <b>Responde a ese aviso</b> con la captura del pago o con la referencia bancaria escrita, y queda vinculada.</p>
       <h3>Comprobantes sueltos</h3>
@@ -186,6 +186,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
         <tr><td><code>/ref</code></td><td>Referencia a mano: <code>/ref &lt;orden&gt; &lt;referencia&gt;</code></td></tr>
         <tr><td><code>/reporte</code></td><td>PDF del período: <code>hoy</code>, <code>ayer</code>, <code>semana</code>, <code>mes</code>, <code>mes pasado</code>, <code>7d</code>, una fecha o un rango</td></tr>
         <tr><td><code>/operaciones</code></td><td>Operaciones abiertas y lo pendiente</td></tr>
+        <tr><td><code>/importar</code></td><td>Trae tu historial de un período sin avisos: <code>/importar 30d</code>, <code>/importar mes pasado</code>. Las órdenes de hoy sí te llegan con aviso</td></tr>
         <tr><td><code>/ayuda</code></td><td>Todos los comandos</td></tr>
       </table>
     </div>
