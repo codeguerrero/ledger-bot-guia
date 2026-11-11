@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Configura tu ledger-bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one readable column, read on a phone next to Binance and Telegram; four numbered steps, then reference. */
+:root {
+  --bg: #f5f7f6;
+  --surface: #ffffff;
+  --fg: #17201c;
+  --muted: #5b6862;
+  --line: #d9e0dc;
+  --accent: #0e7a5f;
+  --accent-soft: #e2f2ec;
+  --ok: #0e7a5f;
+  --no: #b3261e;
+  --warn-bg: #fff4dc;
+  --warn-fg: #6b4a00;
+  --code-bg: #eef2f0;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111614; --surface: #19201d; --fg: #e5ece8; --muted: #9aa9a2; --line: #2b3531;
+    --accent: #4fc79f; --accent-soft: #173229; --ok: #4fc79f; --no: #f08b84;
+    --warn-bg: #3a2f14; --warn-fg: #f3d58a; --code-bg: #222b27; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111614; --surface: #19201d; --fg: #e5ece8; --muted: #9aa9a2; --line: #2b3531;
+  --accent: #4fc79f; --accent-soft: #173229; --ok: #4fc79f; --no: #f08b84;
+  --warn-bg: #3a2f14; --warn-fg: #f3d58a; --code-bg: #222b27; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 36px 72px;
+}
+main { max-width: 720px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.2; }
+h1 { font-size: clamp(30px, 6vw, 42px); letter-spacing: -0.015em; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+p, li { margin: 0; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--font-mono); font-size: 0.88em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; }
+.lead { color: var(--muted); font-size: 17px; margin-top: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pill { font-size: 13px; font-weight: 500; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; }
+
+.step { display: grid; grid-template-columns: 44px 1fr; gap: 0 16px; }
+.num { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); font-family: var(--font-display); font-weight: 700; font-size: 20px; display: grid; place-items: center; }
+.step-body { display: grid; gap: 12px; min-width: 0; padding-top: 6px; }
+ol.sub { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+ol.sub li::marker { color: var(--muted); font-weight: 600; }
+
+.perm { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; }
+.perm li { display: flex; gap: 8px; align-items: baseline; }
+.yes { color: var(--ok); font-weight: 700; }
+.nope { color: var(--no); font-weight: 700; }
+
+.copy { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 14px; min-width: 0; }
+.copy .value { font-family: var(--font-mono); font-size: 15px; flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; user-select: all; }
+.copy button { font: 600 13px var(--font-body); color: var(--accent); background: var(--accent-soft); border: 0; border-radius: 7px; padding: 8px 12px; cursor: pointer; flex: none; }
+.copy button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.note { background: var(--warn-bg); color: var(--warn-fg); border-radius: 10px; padding: 12px 14px; font-size: 15px; }
+.muted { color: var(--muted); font-size: 15px; }
+
+section.ref { display: grid; gap: 14px; }
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; }
+.case b { font-family: var(--font-display); font-size: 16px; }
+.case span { color: var(--muted); font-size: 14.5px; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+td { padding: 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:first-child { padding-right: 16px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+ul.safe { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <h1>Configura tu ledger-bot</h1>
+    <p class="lead">Tu registro de Binance P2P, Binance Pay, cripto y transferencias bancarias, guardado en tu propia Google Sheet, con reportes en PDF.</p>
+    <div class="meta"><span class="pill">4 pasos</span><span class="pill">unos 10 minutos</span><span class="pill">Telegram: @codeguerrero_ledgerbot</span></div>
+  </header>
+
+  <div class="step">
+    <div class="num" aria-hidden="true">1</div>
+    <div class="step-body">
+      <h2>Solicita acceso</h2>
+      <ol class="sub">
+        <li>Abre <b>@codeguerrero_ledgerbot</b> en Telegram y envía <code>/start</code>.</li>
+        <li>Espera el mensaje <b>"✅ Tu acceso fue aprobado"</b>. El administrador aprueba cada solicitud a mano.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num" aria-hidden="true">2</div>
+    <div class="step-body">
+      <h2>Vincula tu API key de Binance</h2>
+      <p>El bot solo <b>lee</b> tus movimientos. Nunca puede operar, comprar, vender ni retirar.</p>
+      <ol class="sub">
+        <li>En Binance, entra a <b>Perfil → Gestión de API</b>.</li>
+        <li>Pulsa <b>Crear API</b>, elige <b>Generada por el sistema</b> y nómbrala <code>ledger-bot</code>. Confirma con tu 2FA.</li>
+        <li>Pulsa <b>Editar restricciones</b> y deja los permisos así:
+          <ul class="perm">
+            <li><span class="yes">✓</span> <span><b>Habilitar lectura</b> (Enable Reading): lo único marcado.</span></li>
+            <li><span class="nope">✕</span> <span>Trading, futuros, retiros, transferencias y todo lo demás: desmarcados.</span></li>
+          </ul>
+        </li>
+        <li>Elige <b>Restringir el acceso solo a IP de confianza</b> y agrega la IP del servidor del bot:
+          <div class="copy" style="margin-top:8px"><span class="value" id="ip">54.94.17.223</span><button type="button" data-copy="ip" id="copy-ip">Copiar</button></div>
+        </li>
+        <li>Guarda y copia la <b>API Key</b> y la <b>Secret Key</b>. Binance muestra la Secret Key una sola vez.</li>
+        <li>En el chat del bot, envía en un solo mensaje:
+          <div class="copy" style="margin-top:8px"><span class="value" id="claves">/claves TU_API_KEY TU_SECRET_KEY</span><button type="button" data-copy="claves" id="copy-claves">Copiar</button></div>
+        </li>
+      </ol>
+      <p class="muted">El bot verifica con Binance que la key sea de solo lectura, borra tu mensaje del chat y la guarda cifrada. Si tiene permisos de más, la rechaza y te dice por qué.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num" aria-hidden="true">3</div>
+    <div class="step-body">
+      <h2>Vincula tu Google Sheet</h2>
+      <ol class="sub">
+        <li>Crea una hoja nueva y vacía en <a href="https://sheets.google.com" target="_blank" rel="noopener">Google Sheets</a>.</li>
+        <li>Pulsa <b>Compartir</b>, agrega este correo como <b>Editor</b> y desmarca "Notificar":
+          <div class="copy" style="margin-top:8px"><span class="value" id="email">ledger-bot@codeguerrero-ledger-bot.iam.gserviceaccount.com</span><button type="button" data-copy="email" id="copy-email">Copiar</button></div>
+        </li>
+        <li>Envía el enlace de la hoja al bot: <code>/hoja https://docs.google.com/spreadsheets/d/…</code> Debe responder <b>"✅ Hoja vinculada"</b>.</li>
+      </ol>
+      <p class="muted">Si responde "❌ No puedo abrir esa hoja", revisa que compartiste con ese correo exacto como Editor y envía <code>/hoja</code> de nuevo.</p>
+      <p class="muted">El bot crea las pestañas <code>transactions</code> (tu registro) y <code>_state</code> (uso interno: no la edites). Puedes filtrar, graficar y corregir <code>transactions</code> a mano.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num" aria-hidden="true">4</div>
+    <div class="step-body">
+      <h2>Úsalo</h2>
+      <p>El bot revisa Binance cada minuto y registra tus movimientos desde un día antes de tu aprobación.</p>
+      <h3>Órdenes P2P</h3>
+      <p>Por cada orden nueva llega un aviso <b>"🔔 Nueva orden P2P"</b>. <b>Responde a ese aviso</b> con la captura del pago o con la referencia bancaria escrita, y queda vinculada.</p>
+      <h3>Comprobantes sueltos</h3>
+      <p>Envía una captura sin responder a nada: el bot la lee, te pregunta si la <b>enviaste o la recibiste</b> y, si coincide con una orden pendiente, te ofrece vincularla.</p>
+      <p class="muted">Bancos: Banesco, Banco de Venezuela, Mercantil, Provincial y Bancamiga.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <section class="ref">
+    <h2>Casos de negocio</h2>
+    <p>Cuando entra dinero de afuera, o envías bolívares que no son de una orden P2P, el bot pregunta el caso para calcular tu ganancia. Cada aviso trae <b>Cambiar caso</b> por si te equivocas.</p>
+    <div class="cases">
+      <div class="case"><b>Mayorista</b><span>Un cliente te envía USDT por red cripto; lo vendes, recompras y le devuelves su USDT.</span></div>
+      <div class="case"><b>Casa de cambio</b><span>Un cliente te envía USDT por Binance Pay a una tasa acordada y pagas bolívares a sus terceros.</span></div>
+      <div class="case"><b>Remesas USD</b><span>Pagas bolívares por USD que llegan a la cuenta de un tercero, quien luego te paga en USDT por Binance Pay.</span></div>
+      <div class="case"><b>Arbitraje</b><span>Compras y ventas P2P con tu propio capital.</span></div>
+    </div>
+  </section>
+
+  <section class="ref">
+    <h2>Comandos</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><td><code>/pendientes</code></td><td>Órdenes P2P esperando comprobante</td></tr>
+        <tr><td><code>/ref</code></td><td>Referencia a mano: <code>/ref &lt;orden&gt; &lt;referencia&gt;</code></td></tr>
+        <tr><td><code>/reporte</code></td><td>PDF del período: <code>hoy</code>, <code>ayer</code>, <code>semana</code>, <code>mes</code>, <code>mes pasado</code>, <code>7d</code>, una fecha o un rango</td></tr>
+        <tr><td><code>/operaciones</code></td><td>Operaciones abiertas y lo pendiente</td></tr>
+        <tr><td><code>/ayuda</code></td><td>Todos los comandos</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="ref">
+    <h2>Seguridad</h2>
+    <ul class="safe">
+      <li>La key es de <b>solo lectura</b> y está <b>restringida a la IP del servidor</b>: no sirve para operar ni desde otro lugar.</li>
+      <li>Se guarda <b>cifrada</b>, y el bot borra del chat tu mensaje con la key.</li>
+      <li>Tus datos quedan en <b>tu</b> Google Sheet.</li>
+      <li>Puedes <b>revocar</b> el acceso cuando quieras: borra la key en Binance y quita el correo del bot de tu hoja.</li>
+    </ul>
+    <p class="note">Nunca compartas tu Secret Key con nadie, ni siquiera con el administrador. Solo se envía al bot con <code>/claves</code>.</p>
+  </section>
+</main>
+
+<script>
+document.querySelectorAll('button[data-copy]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const target = document.getElementById(button.dataset.copy);
+    const text = target.textContent.trim();
+    const done = () => { button.textContent = 'Copiado'; setTimeout(() => { button.textContent = 'Copiar'; }, 1600); };
+    const select = () => { const range = document.createRange(); range.selectNodeContents(target); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range); button.textContent = 'Seleccionado'; };
+    try { navigator.clipboard.writeText(text).then(done, select); } catch { select(); }
+  });
+});
+</script>
+</body>
+</html>
